@@ -1,6 +1,6 @@
 <?php
 /**
- * @version 3.0.4
+ * @version 3.0.5
  */
 
 // Exit if accessed directly.
@@ -124,9 +124,9 @@ if (!defined('ABSPATH')) {
                     <td>
                         <div><label><input class="checkbox-options" name="rounded" value="true" type="checkbox" checked> <?php esc_html_e('Rounded', 'crypto-converter-widget');?></label></div>
                         <div><label><input class="checkbox-options" name="shadow" value="true" type="checkbox" checked> <?php esc_html_e('Shadow', 'crypto-converter-widget');?></label></div>
-                        <div><label><input class="checkbox-options" name="symbol" value="true" type="checkbox" > <?php esc_html_e('Symbol', 'crypto-converter-widget');?> ($)</label></div>
-                        <div><label><input class="checkbox-options" name="stat" value="true" type="checkbox" > <?php esc_html_e('Stats', 'crypto-converter-widget');?></label></div>
-                        <div><label><input class="checkbox-options" name="border" value="true" type="checkbox" > <?php esc_html_e('Border', 'crypto-converter-widget');?></label></div>
+                        <div><label><input class="checkbox-options" name="symbol" value="true" type="checkbox"> <?php esc_html_e('Symbol', 'crypto-converter-widget');?> ($)</label></div>
+                        <div><label><input class="checkbox-options" name="stat" value="true" type="checkbox"> <?php esc_html_e('Stats', 'crypto-converter-widget');?></label></div>
+                        <div><label><input class="checkbox-options" name="border" value="true" type="checkbox" checked> <?php esc_html_e('Border', 'crypto-converter-widget');?></label></div>
                      </td>
                 </tr>
                 </tbody>

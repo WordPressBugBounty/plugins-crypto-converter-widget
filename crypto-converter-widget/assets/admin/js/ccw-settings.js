@@ -3,7 +3,7 @@
  *
  */
 /**
- * @version 3.0.4
+ * @version 3.0.5
  */
 jQuery(document).ready(function () {
   var { gradients, assets, allowed_attr } = ccwData;
@@ -66,6 +66,10 @@ jQuery(document).ready(function () {
 
     if (!data.some((item) => item.name === "rounded")) {
       data.push({ name: "rounded", value: "false" });
+    }
+
+    if (!data.some((item) => item.name === "border")) {
+      data.push({ name: "border", value: "false" });
     }
 
     $widget.removeAttributes();
