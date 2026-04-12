@@ -20,12 +20,8 @@
             action: "CCW_admin_hide_notice",
             security: cryptoConverterWidgetAjax.nonce,
           },
-          success: function (response) {
-            console.log(response);
-          },
-          error: function (response) {
-            console.log(response);
-          },
+          success: function () {},
+          error: function () {},
         });
       }
     );

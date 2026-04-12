@@ -257,7 +257,6 @@
 
       function onChangeGradient(newValue) {
         const gradient = gradients.find((g) => g.name === newValue);
-        console.log(gradient.hex.join(",").trim());
         props.setAttributes({ gradient: newValue });
         props.setAttributes({ backgroundColor: gradient.hex[0].trim() || "" });
         props.setAttributes({ background: gradient.hex.join(",").trim() });

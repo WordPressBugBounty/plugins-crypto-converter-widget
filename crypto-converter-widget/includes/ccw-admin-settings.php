@@ -172,9 +172,9 @@ if (!defined('ABSPATH')) {
       <div class="col-12 col-lg-auto">
         <h3><?php esc_html_e('Help', 'crypto-converter-widget');?></h3>
             <ul>   
-                <li>Crypto Converter ⚡ Widget: <b>v<?php echo CCW_VERSION ;?></b></li>
+                <li>Crypto Converter ⚡ Widget: <b>v<?php echo esc_html( CCW_VERSION ); ?></b></li>
                 <li>ℹ️ <?php esc_html_e('Official website', 'crypto-converter-widget');?>: <a href="https://co-w.io/" target="_blank">CO-W.io</a> | <a href="https://github.com/dejurin/crypto-converter-widget" target="_blank">Github</a></li>
-                <li>❓ <?php esc_html_e('Feel free, write if you will have any questions', 'crypto-converter-widget');?>: <a href="https://t.me/converter_support" target="_blank"><?php esc_html_e('Online support', 'crypto-converter-widget');?></a></li>
+                <li>❓ <?php esc_html_e('Feel free, write if you will have any questions', 'crypto-converter-widget');?>: <a href="https://wordpress.org/support/plugin/crypto-converter-widget/" target="_blank" rel="noopener"><?php esc_html_e('Online support', 'crypto-converter-widget');?></a></li>
                 <li>💰 <?php esc_html_e('Your might like it', 'crypto-converter-widget');?>: <a href="https://wordpress.org/plugins/cryptocurrency-price-widget/" target="_blank">Cryptocurrency Price Widget</a></li>
                 <li>💹 <?php esc_html_e('Supported by', 'crypto-converter-widget');?>: <a href="https://currencyrate.today/" target="_blank">CurrencyRate</a></li>
             </ul>

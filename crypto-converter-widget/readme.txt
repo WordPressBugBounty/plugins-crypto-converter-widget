@@ -2,10 +2,10 @@
 Contributors: falselight
 Tags: bitcoin, converter, coin, cryptocurrency, widget
 Donate link: http://currencyrate.today/
-Tested up to: 6.9
+Tested up to: 7.0
 Requires at least: 3.1
 Requires PHP: 5.3
-Stable tag: 3.1.1
+Stable tag: 3.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,7 +46,7 @@ The price widget automatically cycles through multiple public data sources in pr
 
 == Installation ==
 
-📩 Feel free, write if you will have any questions: [Online support](https://t.me/converter_support)
+📩 Feel free, write if you will have any questions: [Online support](https://wordpress.org/support/plugin/crypto-converter-widget/)
 
 = From your WordPress dashboard =
 1. Visit "Plugins > Add New"
@@ -80,6 +80,16 @@ A. Create div tag with attribute style "width" and insert widget script inside. 
 🚀 Please update the widget as soon as possible to make it work properly;
 
 == Changelog ==
+= 3.1.2 =
+* Security: added capability checks on AJAX handlers
+* Compatibility: declared support for WordPress 7.0
+* Compatibility: fixed PHP 7.x const visibility
+* Added uninstall.php for clean plugin data removal
+* Fixed i18n escaping functions for translatable strings
+* Fixed admin settings version output escaping
+* Removed debug console.log calls from JS assets
+* Fixed duplicate PHPDoc comments
+* Updated support links to WordPress.org forum
 = 3.1.1 =
 * Minor fixed
 = 3.1.0 =
@@ -162,6 +172,6 @@ A. Create div tag with attribute style "width" and insert widget script inside. 
 
 == 🍩 Donations ==
 ℹ️ Official website: [CO-W.io](https://co-w.io/) | [Github](https://github.com/dejurin/crypto-converter-widget)
-❓ Feel free, write if you will have any questions: [Support](https://github.com/dejurin/crypto-converter-widget/issues)
+❓ Feel free, write if you will have any questions: [Support](https://wordpress.org/support/plugin/crypto-converter-widget/)
 💰 Your might like it: [Cryptocurrency Price Widget](https://wordpress.org/plugins/cryptocurrency-price-widget/)
 💹 Source: [CurrencyRate.Today](https://currencyrate.today/)
