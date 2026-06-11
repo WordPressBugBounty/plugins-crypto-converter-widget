@@ -2,7 +2,7 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Crypto Converter ⚡ Widget 3.1.1\n"
+"Project-Id-Version: Crypto Converter ⚡ Widget 3.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/trunk\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,7 +27,7 @@ msgstr ""
 
 #. Description of the plugin
 #: widget_init.php
-msgid "The Crypto Converter Widget for WordPress is a secure, fast, and intuitive plugin that instantly turns your website into a real-time cryptocurrency and fiat currency converter. Offering seamless integration without API keys or complicated setup, this powerful tool supports over 3,313 cryptocurrencies, 170 fiat currencies, tokens, blockchains, and commodities—all with elegant styling, dark-theme compatibility, and built-in caching to keep your site lightning-fast."
+msgid "The Crypto Converter Widget for WordPress is a secure, fast, and intuitive plugin that instantly turns your website into a real-time cryptocurrency and fiat currency converter. Offering seamless integration without API keys or complicated setup, this powerful tool supports ≈14k crypto symbols plus fiat and commodity entries—all with elegant styling, dark-theme compatibility, and built-in caching to keep your site lightning-fast."
 msgstr ""
 
 #. Author of the plugin

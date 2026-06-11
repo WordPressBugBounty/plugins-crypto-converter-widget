@@ -194,18 +194,6 @@ msgstr "Couleurs claires"
 msgid "https://co-w.io/"
 msgstr "https://co-w.io/"
 
-#. Description of the plugin/theme
-msgid ""
-"The Crypto Converter Widget is a magical and easy-to-use web tool with a "
-"beautiful UI, providing real-time cryptocurrency conversion for any website, "
-"and it's free with Gutenberg block support. Users can choose from "
-"approximately ≈170 fiat currencies and around ≈2,200 cryptocurrencies."
-msgstr ""
-"Le Widget Crypto Converter - est un outil web magique et facile à utiliser "
-"avec une belle interface utilisateur en temps réel pour convertir les "
-"cryptocurrencies POUR N'IMPORTE QUEL SITE WEB GRATUIT. Les utilisateurs "
-"peuvent choisir parmi les ≈170 fiat money et ≈2 200 cryptocurrencies "
-"disponibles."
 
 #. Author of the plugin/theme
 msgid "CurrencyRate.today"

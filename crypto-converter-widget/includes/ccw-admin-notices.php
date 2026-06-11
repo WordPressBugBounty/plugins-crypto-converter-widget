@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version 3.1.1
+ * @version 3.2.2
  */
 
 // Exit if accessed directly.
@@ -45,13 +45,33 @@ if (!class_exists('CCW_Admin_Notices')) {
             );
 
             if ( ! current_user_can( 'manage_options' ) ) {
-                wp_send_json_error( 'Unauthorized', 403 );
+                $this->CCW_send_json_response(false, 'Unauthorized', 403);
             }
 
             $user_id = get_current_user_id();
 
             update_user_meta($user_id, 'CCW_admin_hide_notice', time());
-            wp_send_json_success();
+            $this->CCW_send_json_response(true);
+        }
+
+        private function CCW_send_json_response($success, $data = null, $status_code = null)
+        {
+            $function = $success ? 'wp_send_json_success' : 'wp_send_json_error';
+
+            if (function_exists($function)) {
+                call_user_func($function, $data, $status_code);
+            }
+
+            if ($status_code && function_exists('status_header')) {
+                status_header($status_code);
+            }
+
+            header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+            echo json_encode([
+                'success' => (bool) $success,
+                'data' => $data,
+            ]);
+            wp_die();
         }
 
         public function CCW_admin_notice()

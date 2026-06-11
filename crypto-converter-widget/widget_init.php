@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @version 3.1.2
+ * @version 3.2.2
  */
 
 /*
 Plugin Name: Crypto Converter ⚡ Widget
 Plugin URI: https://co-w.io/
-Description: The Crypto Converter Widget for WordPress is a secure, fast, and intuitive plugin that instantly turns your website into a real-time cryptocurrency and fiat currency converter. Offering seamless integration without API keys or complicated setup, this powerful tool supports over 3,313 cryptocurrencies, 170 fiat currencies, tokens, blockchains, and commodities—all with elegant styling, dark-theme compatibility, and built-in caching to keep your site lightning-fast.
-Version: 3.1.2
+Description: The Crypto Converter Widget for WordPress is a secure, fast, and intuitive plugin that instantly turns your website into a real-time cryptocurrency and fiat currency converter. Offering seamless integration without API keys or complicated setup, this powerful tool supports ≈14k crypto symbols plus fiat and commodity entries—all with elegant styling, dark-theme compatibility, and built-in caching to keep your site lightning-fast.
+Version: 3.2.2
 Author: CurrencyRate.today
 Author URI: https://currencyrate.today/
 License: GPLv2 or later
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 } // Exit if accessed directly
 
 define('CCW_NAME', 'Crypto Converter ⚡ Widget');
-define('CCW_VERSION', '3.1.2');
+define('CCW_VERSION', '3.2.2');
 define('CCW_PLUGIN_SLUG', 'crypto-converter-widget');
 
 class CCW_Crypto_Converter_Widget
@@ -90,6 +90,7 @@ class CCW_Crypto_Converter_Widget
         add_action('plugins_loaded', [$this, 'CCW_load_textdomain'], 5);
         add_action('init', [$this, 'CCW_register_public_script'], 5);
         add_action('init', [$this, 'CCW_register_block'], 10);
+        add_action('wp_enqueue_scripts', [$this, 'CCW_enqueue_frontend_style']);
 
         // Shortcode
         add_shortcode(CCW_PLUGIN_SLUG, [$this, 'CCW_shortcode']);
@@ -136,6 +137,14 @@ class CCW_Crypto_Converter_Widget
                 'in_footer' => true,
             ]
         );
+
+        wp_register_style(
+            $this->handler . '-frontend',
+            plugins_url('assets/public/frontend.css', __FILE__),
+            [],
+            CCW_VERSION,
+            'all'
+        );
     }
 
     /**
@@ -148,7 +157,7 @@ class CCW_Crypto_Converter_Widget
         wp_register_script(
             $this->handler . '-block-editor',
             plugins_url('block.js', __FILE__),
-            ['wp-blocks', 'wp-i18n', 'wp-element', 'wp-editor', 'wp-color-picker'],
+            ['wp-blocks', 'wp-block-editor', 'wp-components', 'wp-element', 'wp-i18n'],
             CCW_VERSION,
             true
         );
@@ -193,13 +202,27 @@ class CCW_Crypto_Converter_Widget
                 'theme' => esc_html__('Theme', 'crypto-converter-widget'),
                 'gradient' => esc_html__('Gradient', 'crypto-converter-widget'),
                 'degrees' => esc_html__('Degrees', 'crypto-converter-widget'),
+                'source' => esc_html__('Source:', 'crypto-converter-widget'),
             ],
         ]);
 
-        register_block_type('crypto-converter-widget/widget-block', [
-            'editor_script' => $this->handler . '-block-editor',
-            'script' => $this->handler,
-        ]);
+        if (function_exists('register_block_type')) {
+            call_user_func('register_block_type', 'crypto-converter-widget/widget-block', [
+                'editor_script' => $this->handler . '-block-editor',
+                'script' => $this->handler,
+                'style' => $this->handler . '-frontend',
+            ]);
+        }
+    }
+
+    /**
+     * Enqueue the small front-end attribution stylesheet.
+     *
+     * @return void
+     */
+    public function CCW_enqueue_frontend_style()
+    {
+        wp_enqueue_style($this->handler . '-frontend');
     }
 
     /**
@@ -220,6 +243,7 @@ class CCW_Crypto_Converter_Widget
 
         if (in_array($hook_suffix, $allowed, true)) {
             wp_enqueue_script($this->handler);
+            wp_enqueue_style($this->handler . '-frontend');
         }
     }
 
@@ -324,6 +348,7 @@ class CCW_Crypto_Converter_Widget
     {
         // Do not modify or it will not work correctly.
         wp_enqueue_script($this->handler);
+        wp_enqueue_style($this->handler . '-frontend');
 
         $output = '<!-- Crypto Converter ⚡ Widget -->';
         $output .= '<crypto-converter-widget ';
@@ -339,33 +364,39 @@ class CCW_Crypto_Converter_Widget
         }
         $output = rtrim($output) . '></crypto-converter-widget>';
 
-        $style      = esc_attr('margin-top:0;margin-bottom:0');
-        $source_txt = esc_html__('Source:', 'crypto-converter-widget');
-        $url        = esc_url('https://currencyrate.today/');
-        $link_txt   = esc_html('CurrencyRate', 'crypto-converter-widget');
-
-        // Do not modify or it will not work correctly.
-        $widget_dev = sprintf(
-            '<div style="%1$s">%2$s <a href="%3$s" target="_blank" rel="noopener noreferrer">%4$s</a></div>',
-            $style,
-            $source_txt,
-            $url,
-            $link_txt
-        );
-
         $allowed = [
             'crypto-converter-widget' => array_fill_keys($this->allowed_attr, []),
             'div' => [
                 'style' => [],
+                'class' => [],
+            ],
+            'span' => [
+                'class' => [],
             ],
             'a' => [
                 'href' => [],
                 'target' => [],
                 'rel' => [],
+                'class' => [],
             ],
         ];
 
-        return wp_kses($output . $widget_dev, $allowed);
+        return wp_kses($output . $this->CCW_attribution_markup(), $allowed);
+    }
+
+    /**
+     * Product attribution shown below the widget.
+     *
+     * @return string
+     */
+    private function CCW_attribution_markup()
+    {
+        return sprintf(
+            '<div class="ccw-attribution"><span class="ccw-attribution__label">%1$s</span> <a class="ccw-attribution__link" href="%2$s" target="_blank" rel="noopener noreferrer">%3$s</a></div>',
+            esc_html__('Source:', 'crypto-converter-widget'),
+            esc_url('https://currencyrate.today/'),
+            esc_html('CurrencyRate')
+        );
     }
 
     /**

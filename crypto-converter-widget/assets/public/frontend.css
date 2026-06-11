@@ -1,0 +1,46 @@
+.ccw-attribution,
+.wp-block-crypto-converter-widget-widget-block crypto-converter-widget + div:not([class]) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+    margin: 6px 0 0;
+    max-width: 100%;
+    color: #646970;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.4;
+    text-align: right;
+    text-transform: none;
+}
+
+.ccw-attribution__label,
+.wp-block-crypto-converter-widget-widget-block crypto-converter-widget + div:not([class])::before {
+    color: #8c8f94;
+}
+
+.ccw-attribution--editor {
+    margin-top: 8px;
+}
+
+.wp-block-crypto-converter-widget-widget-block crypto-converter-widget + div:not([class])::before {
+    content: "Source:";
+}
+
+.ccw-attribution__link,
+.wp-block-crypto-converter-widget-widget-block crypto-converter-widget + div:not([class]) a {
+    color: #3c434a;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.ccw-attribution__link:hover,
+.ccw-attribution__link:focus,
+.wp-block-crypto-converter-widget-widget-block crypto-converter-widget + div:not([class]) a:hover,
+.wp-block-crypto-converter-widget-widget-block crypto-converter-widget + div:not([class]) a:focus {
+    color: #135e96;
+    text-decoration: underline;
+}

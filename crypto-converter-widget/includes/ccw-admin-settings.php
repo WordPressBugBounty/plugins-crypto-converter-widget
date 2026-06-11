@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @version 3.1.1
+ * @version 3.2.2
  */
 
 // Exit if accessed directly.
@@ -137,6 +137,10 @@ if (!defined('ABSPATH')) {
          <h2><?php esc_html_e('Preview', 'crypto-converter-widget');?></h2>
          <div style="width:380px">
             <crypto-converter-widget></crypto-converter-widget>
+            <div class="ccw-attribution ccw-attribution--admin">
+                <span class="ccw-attribution__label"><?php esc_html_e('Source:', 'crypto-converter-widget'); ?></span>
+                <a class="ccw-attribution__link" href="https://currencyrate.today/" target="_blank" rel="noopener noreferrer">CurrencyRate</a>
+            </div>
          </div>
       </div>
    </div>
@@ -145,18 +149,24 @@ if (!defined('ABSPATH')) {
     <div class="col-12 col-lg-6">
         <div>
             <h3><?php esc_html_e('Shortcode', 'crypto-converter-widget');?></h3>
-                <?php wp_editor('', 'widget-shortcode', [
-                    'wpautop' => 1,
-                    'media_buttons' => 0,
-                    'textarea_name' => '',
-                    'textarea_rows' => 4,
-                    'tabindex' => null,
-                    'teeny' => 0,
-                    'dfw' => 0,
-                    'tinymce' => 0,
-                    'quicktags' => 0,
-                    'drag_drop_upload' => false,
-                ]);?>
+                <?php
+                if (function_exists('wp_editor')) {
+                    call_user_func('wp_editor', '', 'widget-shortcode', [
+                        'wpautop' => 1,
+                        'media_buttons' => 0,
+                        'textarea_name' => '',
+                        'textarea_rows' => 4,
+                        'tabindex' => null,
+                        'teeny' => 0,
+                        'dfw' => 0,
+                        'tinymce' => 0,
+                        'quicktags' => 0,
+                        'drag_drop_upload' => false,
+                    ]);
+                } else {
+                    echo '<textarea id="widget-shortcode" class="widefat" rows="4"></textarea>';
+                }
+                ?>
             <button class="copy-button" style="margin-top: 10px;float: right;" data-copy-target="widget-shortcode">
                 <span class="dashicons dashicons-admin-page"></span>
             </button>

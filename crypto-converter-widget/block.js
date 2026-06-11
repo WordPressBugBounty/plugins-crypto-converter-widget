@@ -1,5 +1,5 @@
 /**
- * @version 3.1.1
+ * @version 3.2.2
  * @since 2.0.0
  */
 (function (blocks, editor, element, components) {
@@ -98,9 +98,54 @@
   var SelectControl = components.SelectControl;
   var ToggleControl = components.ToggleControl;
   var Divider = components.__experimentalDivider;
+  var useBlockProps = editor.useBlockProps;
+  var Fragment = element.Fragment;
   var source = "currencyrate.today";
 
+  const renderAttribution = (modifier = "") =>
+    el(
+      "div",
+      {
+        className: ["ccw-attribution", modifier].filter(Boolean).join(" "),
+      },
+      el(
+        "span",
+        {
+          className: "ccw-attribution__label",
+        },
+        i18n["source"] || "Source:"
+      ),
+      " ",
+      el(
+        "a",
+        {
+          className: "ccw-attribution__link",
+          href: `https://${source}/`,
+          target: "_blank",
+          rel: "noopener noreferrer",
+        },
+        "CurrencyRate"
+      )
+    );
+
+  const renderLegacyAttribution = () =>
+    el(
+      "div",
+      {},
+      "",
+      el(
+        "a",
+        {
+          href: `https://${source}/`,
+          target: "_blank",
+          rel: "noopener noreferrer",
+        },
+        "CurrencyRate"
+      )
+    );
+
   blocks.registerBlockType("crypto-converter-widget/widget-block", {
+    apiVersion: 3,
     title: i18n["title"] || "Crypto Converter Widget",
     description: i18n["description"] || "Crypto Converter Widget",
     icon: el(
@@ -109,8 +154,8 @@
       el("path", {
         fill: "none",
         stroke: "currentColor",
-        "stroke-linecap": "round",
-        "stroke-linejoin": "round",
+        strokeLinecap: "round",
+        strokeLinejoin: "round",
         d: "M7.79 6.45h0A2.23 2.23 0 0 0 7.83 2H4.39a.81.81 0 0 0-.81.81v8.09a.81.81 0 0 0 .81.81h3.4a2.63 2.63 0 0 0 0-5.26ZM5.13 2V.5M7.63 2V.5m-2.5 13V12m2.5 1.5V12m.2-5.55H3.58",
       })
     ),
@@ -271,57 +316,65 @@
         wp.element.useState(initialOptions);
       const [gradientOptions, setGradientOptions] =
         wp.element.useState(initialGradients);
+      const blockProps = useBlockProps({
+        style: { ...props.style },
+      });
 
-      return [
+      return el(
+        Fragment,
+        {},
         el(
           InspectorControls,
-          null,
+          { key: "inspector-controls" },
           el(
             PanelBody,
             {
-              title: "🖼️ " + i18n["container"] || "Container",
+              key: "container-panel",
+              title: "🖼️ " + (i18n["container"] || "Container"),
               initialOpen: false,
             },
             [
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "container-divider-top", style: { margin: "1rem 0" } }),
               el(ToggleControl, {
+                key: "container-shadow",
                 label: i18n["shadow"] || "Shadow",
                 checked: props.attributes.shadow,
                 onChange: onChangeshadow,
                 __nextHasNoMarginBottom: true,
-                __next40pxDefaultSize: true,
               }),
               el(ToggleControl, {
+                key: "container-rounded",
                 label: i18n["rounded"] || "Rounded",
                 checked: props.attributes.rounded,
                 onChange: onChangeRounded,
                 __nextHasNoMarginBottom: true,
-                __next40pxDefaultSize: true,
               }),
               el(ToggleControl, {
+                key: "container-border",
                 label: i18n["border"] || "Border",
                 checked: props.attributes.border,
                 onChange: onChangeBorder,
                 __nextHasNoMarginBottom: true,
-                __next40pxDefaultSize: true,
               }),
               el(ToggleControl, {
+                key: "container-stat",
                 label: i18n["stat"] || "Stat",
                 checked: props.attributes.stat,
                 onChange: onChangeStat,
                 __nextHasNoMarginBottom: true,
-                __next40pxDefaultSize: true,
               }),
             ]
           ),
           el(
             PanelBody,
             {
-              title: "💅 " + i18n["style"] || "Style",
+              key: "style-panel",
+              title: "💅 " + (i18n["style"] || "Style"),
               initialOpen: false,
             },
             [
               el(SelectControl, {
+                key: "style-theme",
                 label: i18n["theme"] || "Theme",
                 value: props.attributes.theme,
                 options: [
@@ -333,8 +386,9 @@
                 __next40pxDefaultSize: true,
                 __nextHasNoMarginBottom: true,
               }),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "style-divider-gradient", style: { margin: "1rem 0" } }),
               el(ComboboxControl, {
+                key: "style-gradient",
                 label: i18n["gradient"] || "Gradient",
                 value: props.attributes.gradient,
                 options: gradientOptions,
@@ -350,8 +404,9 @@
                 __next40pxDefaultSize: true,
                 __nextHasNoMarginBottom: true,
               }),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "style-divider-degrees", style: { margin: "1rem 0" } }),
               el(RangeControl, {
+                key: "style-degrees",
                 label: i18n["degrees"] || "Degrees",
                 value: props.attributes.deg,
                 min: 0,
@@ -361,10 +416,11 @@
                 __next40pxDefaultSize: true,
                 __nextHasNoMarginBottom: true,
               }),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "style-divider-clear", style: { margin: "1rem 0" } }),
               el(
                 Button,
                 {
+                  key: "style-clear-colors",
                   variant: "secondary",
                   onClick: () => {
                     onChangeBackgroundColor({ hex: "" });
@@ -374,8 +430,9 @@
                 },
                 i18n["clearColors"] || "Clear Colors"
               ),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "style-divider-color", style: { margin: "1rem 0" } }),
               el(ColorPicker, {
+                key: "style-color",
                 label: i18n["color"] || "Color",
                 color: props.attributes.backgroundColor,
                 onChangeComplete: onChangeBackgroundColor,
@@ -385,9 +442,10 @@
           ),
           el(
             PanelBody,
-            { title: "🖥️ " + i18n["display"] || "Display", initialOpen: false },
+            { key: "display-panel", title: "🖥️ " + (i18n["display"] || "Display"), initialOpen: false },
             [
               el(SelectControl, {
+                key: "display-locale",
                 label: i18n["locale"] || "Locale",
                 value: props.attributes.locale,
                 options: initialLocales,
@@ -396,14 +454,15 @@
                 __nextHasNoMarginBottom: true,
               }),
               el(ToggleControl, {
+                key: "display-symbol",
                 label: i18n["symbol"] || "Symbol ($)",
                 checked: props.attributes.symbol,
                 onChange: onChangeSymbol,
                 __nextHasNoMarginBottom: true,
-                __next40pxDefaultSize: true,
               }),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "display-divider-base", style: { margin: "1rem 0" } }),
               el(ComboboxControl, {
+                key: "display-base",
                 label: i18n["base"] || "Base",
                 value: props.attributes.base,
                 options: baseOptions,
@@ -419,8 +478,9 @@
                 __next40pxDefaultSize: true,
                 __nextHasNoMarginBottom: true,
               }),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "display-divider-quote", style: { margin: "1rem 0" } }),
               el(ComboboxControl, {
+                key: "display-quote",
                 label: i18n["quote"] || "Quote",
                 value: props.attributes.quote,
                 options: quoteOptions,
@@ -436,16 +496,18 @@
                 __next40pxDefaultSize: true,
                 __nextHasNoMarginBottom: true,
               }),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "display-divider-amount", style: { margin: "1rem 0" } }),
               el(TextControl, {
+                key: "display-amount",
                 label: i18n["amount"] || "Amount",
                 value: props.attributes.amount,
                 onChange: onChangeAmount,
                 __next40pxDefaultSize: true,
                 __nextHasNoMarginBottom: true,
               }),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "display-divider-decimal", style: { margin: "1rem 0" } }),
               el(RangeControl, {
+                key: "display-decimal",
                 label: i18n["decimal"] || "Decimal Places",
                 value: props.attributes.decimal,
                 onChange: onChangeDecimal,
@@ -455,8 +517,9 @@
                 __nextHasNoMarginBottom: true,
                 __next40pxDefaultSize: true,
               }),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "display-divider-tax", style: { margin: "1rem 0" } }),
               el(TextControl, {
+                key: "display-tax",
                 label: i18n["tax"] || "Tax/Fee",
                 value: props.attributes.tax,
                 onChange: onChangeTax,
@@ -467,39 +530,43 @@
           ),
           el(
             PanelBody,
-            { title: "ℹ️ " + i18n["about"] || "About", initialOpen: true },
+            { key: "about-panel", title: "ℹ️ " + (i18n["about"] || "About"), initialOpen: true },
             [
               el(
                 ExternalLink,
                 {
+                  key: "about-plugin",
                   href: "https://wordpress.org/plugins/crypto-converter-widget/",
                   target: "_blank",
                   style: { textDecoration: "none" },
                 },
                 "📟 Crypto Converter ⚡ Widget"
               ),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "about-divider-rating", style: { margin: "1rem 0" } }),
               el(
                 ExternalLink,
                 {
+                  key: "about-rating",
                   href: "https://wordpress.org/support/plugin/crypto-converter-widget/reviews/#new-post",
                   target: "_blank",
                   style: { textDecoration: "none" },
                 },
                 i18n["ratePlugin"] || "❤️ Rate Plugin ★★★★★"
               ),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "about-divider-demo", style: { margin: "1rem 0" } }),
               el(
                 ExternalLink,
                 {
+                  key: "about-demo",
                   href: "https://co-w.io/",
                   target: "_blank",
                   style: { textDecoration: "none" },
                 },
                 i18n["demoPlugin"] || "DEMO 👀"
               ),
-              el(Divider, { style: { margin: "1rem 0" } }),
+              el(Divider, { key: "about-divider-code", style: { margin: "1rem 0" } }),
               el(TextareaControl, {
+                key: "about-code",
                 label: props.attributes.mode ? "HTML" : "Shortcode",
                 value: formatTag(
                   {
@@ -512,13 +579,13 @@
                 __nextHasNoMarginBottom: true,
               }),
               el(ToggleControl, {
+                key: "about-code-mode",
                 label: "HTML",
                 checked: props.attributes.mode,
                 onChange: (value) => {
                   props.setAttributes({ mode: value });
                 },
                 __nextHasNoMarginBottom: true,
-                __next40pxDefaultSize: true,
               }),
             ]
           )
@@ -526,37 +593,111 @@
         el(
           "div",
           {
-            className: props.className,
-            style: { ...props.style, ...{ pointerEvents: "none" } },
+            key: "block-preview",
+            ...blockProps,
           },
-          el("crypto-converter-widget", buildWidgetAttributes(props.attributes))
-        ),
-      ];
-    },
-    save: function (props) {
-      return el(
-        "div",
-        {
-          className: props.className,
-          style: { ...props.style },
-        },
-        el("crypto-converter-widget", buildWidgetAttributes(props.attributes)),
-        el(
-          "div",
-          {},
-          "",
           el(
-            "a",
+            "div",
             {
-              href: `https://${source}/`,
-              target: "_blank",
-              rel: "noopener noreferrer",
+              key: "block-preview-inner",
+              style: { pointerEvents: "none" },
             },
-            "CurrencyRate"
+            el("crypto-converter-widget", buildWidgetAttributes(props.attributes)),
+            renderAttribution("ccw-attribution--editor")
           )
         )
       );
     },
+    save: function (props) {
+      return el(
+        "div",
+        useBlockProps.save({ style: { ...props.style } }),
+        el("crypto-converter-widget", buildWidgetAttributes(props.attributes)),
+        renderAttribution()
+      );
+    },
+    deprecated: [
+      {
+        attributes: {
+          deg: {
+            type: "number",
+            default: 120,
+          },
+          theme: {
+            type: "string",
+            default: "auto",
+          },
+          locale: {
+            type: "string",
+            default: "auto",
+          },
+          backgroundColor: {
+            type: "string",
+            default: "#1e40af",
+          },
+          background: {
+            type: "string",
+            default: "#8E2DE2,#4A00E0",
+          },
+          decimal: {
+            type: "number",
+            default: 2,
+          },
+          symbol: {
+            type: "boolean",
+            default: true,
+          },
+          shadow: {
+            type: "boolean",
+            default: true,
+          },
+          rounded: {
+            type: "boolean",
+            default: true,
+          },
+          border: {
+            type: "boolean",
+            default: true,
+          },
+          stat: {
+            type: "boolean",
+            default: false,
+          },
+          amount: {
+            type: "string",
+            default: "1",
+          },
+          tax: {
+            type: "string",
+            default: "0",
+          },
+          base: {
+            type: "string",
+            default: "BTC",
+          },
+          quote: {
+            type: "string",
+            default: "USD",
+          },
+          gradient: {
+            type: "string",
+            default: "Amin",
+          },
+          mode: {
+            type: "boolean",
+            default: false,
+          },
+        },
+        save: function (props) {
+          return el(
+            "div",
+            useBlockProps.save({ style: { ...props.style } }),
+            el("crypto-converter-widget", buildWidgetAttributes(props.attributes)),
+            renderLegacyAttribution()
+          );
+        },
+      },
+    ],
   });
 })(
   window.wp.blocks,

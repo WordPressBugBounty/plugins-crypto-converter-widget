@@ -3,7 +3,7 @@
  *
  */
 /**
- * @version 3.1.1
+ * @version 3.2.2
  */
 jQuery(document).ready(function () {
   var { gradients, assets, allowed_attr } = ccwData;
@@ -99,7 +99,7 @@ jQuery(document).ready(function () {
 
     var htmlCode =
       `&lt;${shortCode}&gt;&lt;/crypto-converter-widget&gt;\n` +
-      `&lt;script async src="https://cdn.jsdelivr.net/gh/dejurin/crypto-converter-widget@latest/dist/latest.min.js"&gt;&lt;/script&gt;`;
+      `&lt;script async src="https://cdn.jsdelivr.net/gh/dejurin/crypto-converter-widget@3.2.2/dist/latest.min.js"&gt;&lt;/script&gt;`;
     jQuery("#widget-htmlcode").html(htmlCode);
   }
 
