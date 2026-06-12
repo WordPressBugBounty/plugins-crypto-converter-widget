@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @version 3.2.2
+ * @version 3.3.2
  */
 
 /*
 Plugin Name: Crypto Converter ⚡ Widget
 Plugin URI: https://co-w.io/
 Description: The Crypto Converter Widget for WordPress is a secure, fast, and intuitive plugin that instantly turns your website into a real-time cryptocurrency and fiat currency converter. Offering seamless integration without API keys or complicated setup, this powerful tool supports ≈14k crypto symbols plus fiat and commodity entries—all with elegant styling, dark-theme compatibility, and built-in caching to keep your site lightning-fast.
-Version: 3.2.2
+Version: 3.3.2
 Author: CurrencyRate.today
 Author URI: https://currencyrate.today/
 License: GPLv2 or later
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 } // Exit if accessed directly
 
 define('CCW_NAME', 'Crypto Converter ⚡ Widget');
-define('CCW_VERSION', '3.2.2');
+define('CCW_VERSION', '3.3.2');
 define('CCW_PLUGIN_SLUG', 'crypto-converter-widget');
 
 class CCW_Crypto_Converter_Widget
@@ -31,7 +31,6 @@ class CCW_Crypto_Converter_Widget
 
     protected $handler = 'crypto-converter-widget';
     protected $gradients;
-    protected $assets;
     protected $locales;
     protected $allowed_attr = [
         'base', 'quote', 'amount', 'decimal', 'theme',
@@ -51,7 +50,6 @@ class CCW_Crypto_Converter_Widget
     private function __construct()
     {
         $this->gradients = $this->CCW_load_json_file(plugin_dir_path(__FILE__).'assets/public/gradient.json');
-        $this->assets    = $this->CCW_load_json_file(plugin_dir_path(__FILE__).'assets/public/assets.json');
 
         $this->locales = [
             'en-US' => 'English (US)',
@@ -166,7 +164,7 @@ class CCW_Crypto_Converter_Widget
             'locale' => get_locale(),
             'handler' => $this->handler,
             'gradients' => $this->gradients,
-            'assets'    => $this->assets,
+            'assetsUrl' => plugins_url('assets/public/assets_runtime_V3.json', __FILE__),
             'locales'   => $this->locales,
             'i18n' => [
                 'amount' => esc_html__('Amount', 'crypto-converter-widget'),
@@ -278,7 +276,7 @@ class CCW_Crypto_Converter_Widget
 
         wp_localize_script($this->handler.'-settings', 'ccwData', [
             'gradients'     => $this->gradients,
-            'assets'        => $this->assets,
+            'assetsUrl'     => plugins_url('assets/public/assets_runtime_V3.json', __FILE__),
             'locales'       => $this->locales,
             'allowed_attr'  => $this->allowed_attr,
             'ajaxUrl'       => admin_url('admin-ajax.php'),
@@ -459,6 +457,7 @@ class CCW_Crypto_Converter_Widget
 
         return $data;
     }
+
 }
 
 add_action('plugins_loaded', ['CCW_Crypto_Converter_Widget', 'get_instance']);

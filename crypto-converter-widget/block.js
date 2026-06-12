@@ -1,9 +1,9 @@
 /**
- * @version 3.2.2
+ * @version 3.3.2
  * @since 2.0.0
  */
 (function (blocks, editor, element, components) {
-  const { locale: lang, i18n, gradients, assets, locales } = blockData;
+  const { locale: lang, i18n, gradients, assetsUrl, locales } = blockData;
 
   const initialGradients = gradients.map((i) => ({
     value: i.name,
@@ -13,10 +13,70 @@
     { value: "auto", label: "Auto" },
     ...Object.entries(locales).map(([k, v]) => ({ value: k, label: v })),
   ];
-  const initialOptions = assets.map((i) => ({
-    value: i.SYMBOL,
-    label: i.SYMBOL,
-  }));
+  const fallbackAssetOptions = [
+    { value: "BTC", label: "BTC" },
+    { value: "USD", label: "USD" },
+  ];
+  let assetOptionsCache = null;
+  let assetOptionsRequest = null;
+
+  const normalizeAssetOptions = (manifest) => {
+    const seen = {};
+    const options = [];
+
+    ["crypto", "legacyCrypto", "money"].forEach((section) => {
+      if (!manifest || !Array.isArray(manifest[section])) {
+        return;
+      }
+
+      manifest[section].forEach((item) => {
+        if (!Array.isArray(item) || !item[0]) {
+          return;
+        }
+
+        const symbol = String(item[0]).trim().toUpperCase();
+        if (!symbol || seen[symbol]) {
+          return;
+        }
+
+        seen[symbol] = true;
+        options.push({ value: symbol, label: symbol });
+      });
+    });
+
+    return options;
+  };
+
+  const loadAssetOptions = () => {
+    if (!assetsUrl || typeof fetch !== "function") {
+      return Promise.resolve(fallbackAssetOptions);
+    }
+    if (assetOptionsCache) {
+      return Promise.resolve(assetOptionsCache);
+    }
+    if (assetOptionsRequest) {
+      return assetOptionsRequest;
+    }
+
+    assetOptionsRequest = fetch(assetsUrl, { credentials: "same-origin" })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Asset manifest request failed.");
+        }
+        return response.json();
+      })
+      .then((manifest) => {
+        const options = normalizeAssetOptions(manifest);
+        assetOptionsCache = options.length ? options : fallbackAssetOptions;
+        return options.length ? options : fallbackAssetOptions;
+      })
+      .catch(() => fallbackAssetOptions)
+      .finally(() => {
+        assetOptionsRequest = null;
+      });
+
+    return assetOptionsRequest;
+  };
 
   const formatTag = ({ tag, content, ...attrs }, mode = "shortcode") => {
     // build attributes string
@@ -311,11 +371,30 @@
         props.setAttributes({ deg: newValue });
       }
 
-      const [baseOptions, setBaseOptions] = wp.element.useState(initialOptions);
+      const [assetOptions, setAssetOptions] =
+        wp.element.useState(fallbackAssetOptions);
+      const [baseOptions, setBaseOptions] =
+        wp.element.useState(fallbackAssetOptions);
       const [quoteOptions, setQuoteOptions] =
-        wp.element.useState(initialOptions);
+        wp.element.useState(fallbackAssetOptions);
       const [gradientOptions, setGradientOptions] =
         wp.element.useState(initialGradients);
+      wp.element.useEffect(() => {
+        let isMounted = true;
+        loadAssetOptions().then((options) => {
+          if (!isMounted) {
+            return;
+          }
+
+          setAssetOptions(options);
+          setBaseOptions(options);
+          setQuoteOptions(options);
+        });
+
+        return () => {
+          isMounted = false;
+        };
+      }, []);
       const blockProps = useBlockProps({
         style: { ...props.style },
       });
@@ -470,7 +549,7 @@
                 onFilterValueChange: (inputValue) => {
                   const q = inputValue.trim().toLowerCase();
                   setBaseOptions(
-                    initialOptions.filter((o) =>
+                    assetOptions.filter((o) =>
                       o.label.toLowerCase().includes(q)
                     )
                   );
@@ -488,7 +567,7 @@
                 onFilterValueChange: (inputValue) => {
                   const q = inputValue.trim().toLowerCase();
                   setQuoteOptions(
-                    initialOptions.filter((o) =>
+                    assetOptions.filter((o) =>
                       o.label.toLowerCase().includes(q)
                     )
                   );

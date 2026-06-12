@@ -3,10 +3,10 @@
  *
  */
 /**
- * @version 3.2.2
+ * @version 3.3.2
  */
 jQuery(document).ready(function () {
-  var { gradients, assets, allowed_attr } = ccwData;
+  var { gradients, assetsUrl, allowed_attr } = ccwData;
 
   var $form = jQuery("form#widget-settings");
   var $widget = jQuery("crypto-converter-widget");
@@ -16,10 +16,10 @@ jQuery(document).ready(function () {
   var $deg = jQuery('input[name="deg"]');
   var $background = jQuery('input[name="background"]');
 
-  var initialOptions = assets.map((asset) => ({
-    id: asset.SYMBOL,
-    text: asset.SYMBOL,
-  }));
+  var initialOptions = [
+    { id: "BTC", text: "BTC" },
+    { id: "USD", text: "USD" },
+  ];
 
   var initialGradientOptions = gradients.map((asset) => {
     var hexValue = asset.hex;
@@ -61,6 +61,85 @@ jQuery(document).ready(function () {
 
     return brightness < 128;
   }
+  function normalizeAssetOptions(manifest) {
+    var seen = {};
+    var options = [];
+    ["crypto", "legacyCrypto", "money"].forEach(function (section) {
+      if (!manifest || !Array.isArray(manifest[section])) {
+        return;
+      }
+
+      manifest[section].forEach(function (item) {
+        if (!Array.isArray(item) || !item[0]) {
+          return;
+        }
+
+        var symbol = String(item[0]).trim().toUpperCase();
+        if (!symbol || seen[symbol]) {
+          return;
+        }
+
+        seen[symbol] = true;
+        options.push({
+          id: symbol,
+          text: symbol,
+        });
+      });
+    });
+
+    return options;
+  }
+  function loadAssetOptions() {
+    var fallback = initialOptions.slice();
+    if (!assetsUrl) {
+      return jQuery.Deferred().resolve(fallback).promise();
+    }
+
+    return jQuery.getJSON(assetsUrl).then(
+      function (manifest) {
+        var options = normalizeAssetOptions(manifest);
+        return options.length ? options : fallback;
+      },
+      function () {
+        return fallback;
+      }
+    );
+  }
+  function initAssetSelects(options) {
+    initialOptions = options;
+    $base.empty().prop("disabled", false);
+    $quote.empty().prop("disabled", false);
+
+    $base
+      .select2({
+        data: initialOptions,
+        placeholder: "BTC",
+        width: "100%",
+        matcher: matcherSelect2,
+        templateResult: renderOption,
+        templateSelection: renderOption,
+        escapeMarkup: (m) => m,
+      })
+      .on("change", () => {
+        ws();
+      });
+    $quote
+      .select2({
+        data: initialOptions,
+        placeholder: "USD",
+        width: "100%",
+        matcher: matcherSelect2,
+        templateResult: renderOption,
+        templateSelection: renderOption,
+        escapeMarkup: (m) => m,
+      })
+      .on("change", () => {
+        ws();
+      });
+
+    $base.val("BTC").trigger("change");
+    $quote.val("USD").trigger("change");
+  }
   function ws() {
     var data = $form.serializeArray();
 
@@ -99,7 +178,7 @@ jQuery(document).ready(function () {
 
     var htmlCode =
       `&lt;${shortCode}&gt;&lt;/crypto-converter-widget&gt;\n` +
-      `&lt;script async src="https://cdn.jsdelivr.net/gh/dejurin/crypto-converter-widget@3.2.2/dist/latest.min.js"&gt;&lt;/script&gt;`;
+      `&lt;script async src="https://cdn.jsdelivr.net/gh/dejurin/crypto-converter-widget@3.3.2/dist/latest.min.js"&gt;&lt;/script&gt;`;
     jQuery("#widget-htmlcode").html(htmlCode);
   }
 
@@ -291,32 +370,6 @@ jQuery(document).ready(function () {
     },
     selectOnClose: true,
   });
-  $base
-    .select2({
-      data: initialOptions,
-      placeholder: "BTC",
-      width: "100%",
-      matcher: matcherSelect2,
-      templateResult: renderOption,
-      templateSelection: renderOption,
-      escapeMarkup: (m) => m,
-    })
-    .on("change", () => {
-      ws();
-    });
-  $quote
-    .select2({
-      data: initialOptions,
-      placeholder: "USD",
-      width: "100%",
-      matcher: matcherSelect2,
-      templateResult: renderOption,
-      templateSelection: renderOption,
-      escapeMarkup: (m) => m,
-    })
-    .on("change", () => {
-      ws();
-    });
   function matcherSelect2(params, data) {
     if (!params.term || !data.text) return data;
     return data.text.toLowerCase().includes(params.term.toLowerCase())
@@ -336,10 +389,9 @@ jQuery(document).ready(function () {
   }
 
   $gradient.val("Amin");
-  $base.val("BTC");
-  $quote.val("USD");
+  $base.prop("disabled", true);
+  $quote.prop("disabled", true);
   $gradient.trigger("change");
-  $base.trigger("change");
-  $quote.trigger("change");
+  loadAssetOptions().then(initAssetSelects);
   ws();
 });

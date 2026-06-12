@@ -5,7 +5,7 @@ Donate link: https://currencyrate.today/
 Tested up to: 7.0
 Requires at least: 3.1
 Requires PHP: 5.4
-Stable tag: 3.2.2
+Stable tag: 3.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,6 +108,9 @@ Use the official WordPress.org support forum: [Support](https://wordpress.org/su
 
 == Upgrade Notice ==
 
+= 3.3.2 =
+Updated the bundled widget to 3.3.2 and switched admin/block suggestions to a compact runtime asset manifest.
+
 = 3.2.2 =
 Updated widget assets, Gutenberg block compatibility, attribution styling, metadata, and documentation for the refreshed converter release.
 
@@ -115,6 +118,14 @@ Updated widget assets, Gutenberg block compatibility, attribution styling, metad
 🚀 Please update the widget as soon as possible to make it work properly;
 
 == Changelog ==
+= 3.3.2 =
+* Updated the bundled public widget JavaScript to public widget release 3.3.2
+* Added local `assets_runtime_V3.json`, `assets_catalog_V3.json` for lightweight WordPress admin and block currency suggestions
+* Updated plugin version metadata, asset versions, and generated standalone HTML CDN snippet to 3.3.2
+
+= 3.2.5 =
+* Updated the bundled public widget JavaScript to public widget release 3.2.5
+* Updated plugin version metadata, asset versions, and generated HTML CDN snippet to 3.2.5
 = 3.2.2 =
 * Updated the main public widget JavaScript bundle and WordPress metadata to version 3.2.2
 * Updated asset copy to ≈14k crypto symbols plus fiat and commodity entries
