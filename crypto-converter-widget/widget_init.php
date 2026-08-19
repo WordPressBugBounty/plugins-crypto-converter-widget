@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @version 3.3.2
+ * @version 3.3.4
  */
 
 /*
 Plugin Name: Crypto Converter ⚡ Widget
 Plugin URI: https://co-w.io/
 Description: The Crypto Converter Widget for WordPress is a secure, fast, and intuitive plugin that instantly turns your website into a real-time cryptocurrency and fiat currency converter. Offering seamless integration without API keys or complicated setup, this powerful tool supports ≈14k crypto symbols plus fiat and commodity entries—all with elegant styling, dark-theme compatibility, and built-in caching to keep your site lightning-fast.
-Version: 3.3.2
+Version: 3.3.4
 Author: CurrencyRate.today
 Author URI: https://currencyrate.today/
 License: GPLv2 or later
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
 } // Exit if accessed directly
 
 define('CCW_NAME', 'Crypto Converter ⚡ Widget');
-define('CCW_VERSION', '3.3.2');
+define('CCW_VERSION', '3.3.4');
 define('CCW_PLUGIN_SLUG', 'crypto-converter-widget');
 
 class CCW_Crypto_Converter_Widget
@@ -127,7 +127,12 @@ class CCW_Crypto_Converter_Widget
         // Register the script for later enqueue
         wp_register_script(
             $this->handler,
-            plugins_url('assets/public/crypto-converter-widget.js', __FILE__),
+            plugins_url(
+                is_admin()
+                    ? 'assets/public/crypto-converter-widget-loader.js'
+                    : 'assets/public/crypto-converter-widget.js',
+                __FILE__
+            ),
             [],
             CCW_VERSION,
             [

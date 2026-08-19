@@ -2,10 +2,10 @@
 Contributors: falselight
 Tags: bitcoin, converter, coin, cryptocurrency, widget
 Donate link: https://currencyrate.today/
-Tested up to: 7.0
+Tested up to: 7.1
 Requires at least: 3.1
 Requires PHP: 5.4
-Stable tag: 3.3.2
+Stable tag: 3.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -108,6 +108,9 @@ Use the official WordPress.org support forum: [Support](https://wordpress.org/su
 
 == Upgrade Notice ==
 
+= 3.3.4 =
+Improves compatibility with the WordPress 7.1 block editor and synchronizes the bundled widget to release 3.3.4.
+
 = 3.3.2 =
 Updated the bundled widget to 3.3.2 and switched admin/block suggestions to a compact runtime asset manifest.
 
@@ -118,6 +121,11 @@ Updated widget assets, Gutenberg block compatibility, attribution styling, metad
 🚀 Please update the widget as soon as possible to make it work properly;
 
 == Changelog ==
+= 3.3.4 =
+* Fixed compatibility with the WordPress 7.1 block editor.
+* Improved widget initialization reliability in the editor while preserving asynchronous loading on public pages.
+* Synchronized the bundled widget and CDN version with release 3.3.4.
+
 = 3.3.2 =
 * Updated the bundled public widget JavaScript to public widget release 3.3.2
 * Added local `assets_runtime_V3.json`, `assets_catalog_V3.json` for lightweight WordPress admin and block currency suggestions
